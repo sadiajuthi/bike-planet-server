@@ -28,12 +28,36 @@ async function run() {
             res.send(products);
         })
 
+
         // get one product by id
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const product = await productCollection.findOne(query);
             res.send(product);
+        })
+
+        //update a product
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id
+            const updateProduct = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    quantity: updateProduct.pmquantity
+                }
+            };
+            const result = await productCollection.updateOne(filter, updateDoc, options)
+            res.send(result);
+        })
+
+        //delete a product
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
+            res.send(result);
         })
 
 
