@@ -3,14 +3,13 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
-//mongoDB
-//username: dbUser1
-//password: HRI5atTYBsKXkKSd
+
 
 // connect to database
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { query } = require('express');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.yebql.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -58,15 +57,9 @@ async function run() {
             };
             const result = await productCollection.updateOne(filter, updateDoc, options)
             res.send(result);
-        })
+        });
 
-        //delete a product
-        app.delete('/user/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await productCollection.deleteOne(query);
-            res.send(result);
-        })
+
 
         // Add new Item
         app.post('/product', async (req, res) => {
@@ -74,6 +67,15 @@ async function run() {
             console.log('add new item', newProduct);
             const result = await productCollection.insertOne(newProduct);
             res.send(result)
+
+        });
+
+        // Delete a item
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
+            res.send(result);
 
         });
 
