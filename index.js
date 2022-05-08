@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 
 
@@ -59,6 +59,17 @@ async function run() {
             res.send(result);
         });
 
+        // Add item by email
+        app.get('/product', async (req, res) => {
+            const email = req?.query?.email;
+            console.log(email);
+
+            const query = { email: email };
+            const cursor = productCollection.find(query);
+            const product = await cursor.toArray();
+
+            res.send(product)
+        })
 
 
         // Add new Item
