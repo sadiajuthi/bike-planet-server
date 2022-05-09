@@ -35,6 +35,15 @@ async function run() {
             res.send(products);
         })
 
+        // Add item by email
+        app.get('/myproduct', async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            const query = { email: email };
+            const cursor = productCollection.find(query);
+            const product = await cursor.toArray();
+            res.send(product)
+        })
 
         // get one product by id
         app.get('/product/:id', async (req, res) => {
@@ -59,17 +68,6 @@ async function run() {
             res.send(result);
         });
 
-        // Add item by email
-        app.get('/product', async (req, res) => {
-            const email = req?.query?.email;
-            console.log(email);
-
-            const query = { email: email };
-            const cursor = productCollection.find(query);
-            const product = await cursor.toArray();
-
-            res.send(product)
-        })
 
 
         // Add new Item
@@ -80,6 +78,8 @@ async function run() {
             res.send(result)
 
         });
+
+
 
         // Delete a item
         app.delete('/product/:id', async (req, res) => {
@@ -105,5 +105,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log('listening to port');
+    console.log('listening to port', port);
 })
